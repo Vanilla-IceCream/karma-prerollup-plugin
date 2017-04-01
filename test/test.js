@@ -1,13 +1,8 @@
-const path = require('path');
-const assign = require('object-assign');
-const { expect } = require('chai');
-const { Server } = require('karma');
-const buble = require('rollup-plugin-buble');
-const karmaMocha = require('karma-mocha');
-const karmaChai = require('karma-chai');
-const karmaPhantomjsLauncher = require('karma-phantomjs-launcher');
+import path from 'path';
+import { expect } from 'chai';
+import buble from 'rollup-plugin-buble';
 
-const rollupPlugin = require('../');
+const prerollupPlugin = require('../');
 
 process.chdir(__dirname);
 
@@ -23,8 +18,8 @@ const runFixture = (fixture, options = {}) => {
     plugins: [buble()]
   };
 
-  const createPreprocessor = rollupPlugin['preprocessor:prerollup'][1];
-  const preprocessor = createPreprocessor(null, assign(defaults, options), loggerMock);
+  const createPreprocessor = prerollupPlugin['preprocessor:prerollup'][1];
+  const preprocessor = createPreprocessor(null, Object.assign(defaults, options), loggerMock);
   const file = {
     originalPath: path.resolve(__dirname, 'fixtures/' + fixture)
   };
@@ -46,10 +41,10 @@ const runFixture = (fixture, options = {}) => {
 
 describe('karma-prerollup-plugin', () => {
   it('should be karma preprocessor', () => {
-    expect(rollupPlugin).to.exist;
-    expect(rollupPlugin).to.be.an.object;
-    expect(rollupPlugin['preprocessor:prerollup']).to.be.an.array;
-    expect(rollupPlugin['preprocessor:prerollup'][1]).to.be.a.function;
+    expect(prerollupPlugin).to.exist;
+    expect(prerollupPlugin).to.be.an.object;
+    expect(prerollupPlugin['preprocessor:prerollup']).to.be.an.array;
+    expect(prerollupPlugin['preprocessor:prerollup'][1]).to.be.a.function;
   });
 
   it('should bundle es2015 modules', () => {

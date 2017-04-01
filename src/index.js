@@ -6,7 +6,7 @@ const createRollupPreprocessor = (args, options = {}, logger) => {
   const log = logger.create('preprocessor.prerollup');
 
   return (content, file, done) => {
-    log.debug('Processing "%s".', file.originalPath);
+    log.debug(`Processing "${file.originalPath}".`);
 
     try {
       options.entry = file.originalPath;
@@ -15,17 +15,17 @@ const createRollupPreprocessor = (args, options = {}, logger) => {
         .then(bundle => {
           let { code, map } = bundle.generate(options);
 
-          if (options.sourceMap === 'inline') code += '\n//# ' + SOURCEMAPPING_URL + '=' + map.toUrl();
+          if (options.sourceMap === 'inline') code += `\n//# ${SOURCEMAPPING_URL}=${map.toUrl()}`;
           if (options.sourceMap) file.sourceMap = map;
 
           done(null, code);
         })
         .catch(error => {
-          log.error('%s\n at %s\n%s', error.message, file.originalPath, error.stack);
+          log.error(`${error.message}\n at ${file.originalPath}\n${error.stack}`);
           done(error);
         });
     } catch (error) {
-      log.error('%s\n at %s', error.message, file.originalPath);
+      log.error(`${error.message}\n at ${file.originalPath}`);
       done(error);
     }
   };

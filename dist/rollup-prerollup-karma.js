@@ -11,7 +11,7 @@ var createRollupPreprocessor = function (args, options, logger) {
   var log = logger.create('preprocessor.prerollup');
 
   return function (content, file, done) {
-    log.debug('Processing "%s".', file.originalPath);
+    log.debug(("Processing \"" + (file.originalPath) + "\"."));
 
     try {
       options.entry = file.originalPath;
@@ -22,17 +22,17 @@ var createRollupPreprocessor = function (args, options, logger) {
           var code = ref.code;
           var map = ref.map;
 
-          if (options.sourceMap === 'inline') { code += '\n//# ' + SOURCEMAPPING_URL + '=' + map.toUrl(); }
+          if (options.sourceMap === 'inline') { code += "\n//# " + SOURCEMAPPING_URL + "=" + (map.toUrl()); }
           if (options.sourceMap) { file.sourceMap = map; }
 
           done(null, code);
         })
         .catch(function (error) {
-          log.error('%s\n at %s\n%s', error.message, file.originalPath, error.stack);
+          log.error(((error.message) + "\n at " + (file.originalPath) + "\n" + (error.stack)));
           done(error);
         });
     } catch (error) {
-      log.error('%s\n at %s', error.message, file.originalPath);
+      log.error(((error.message) + "\n at " + (file.originalPath)));
       done(error);
     }
   };
@@ -41,3 +41,4 @@ var createRollupPreprocessor = function (args, options, logger) {
 createRollupPreprocessor.$inject = ['args', 'config.prerollupPreprocessor', 'logger'];
 
 module.exports = { 'preprocessor:prerollup': ['factory', createRollupPreprocessor] };
+//# sourceMappingURL=rollup-prerollup-karma.js.map
