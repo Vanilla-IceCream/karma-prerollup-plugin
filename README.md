@@ -17,10 +17,12 @@ module.exports = config => {
     // ...
     preprocessors: {
       'src/polyfills.js': ['prerollup'],
+      'src/vendor.js': ['prerollup'],
       'src/**/*.spec.js': ['rollup']
     },
     prerollupPreprocessor: {
       plugins: [
+        postcss({ plugins: [cssnano()] }),
         babel({
           babelrc: false,
           presets: [['latest', { es2015: { modules: false } }]],
@@ -37,7 +39,9 @@ module.exports = config => {
       format: 'iife'
     },
     rollupPreprocessor: {
-      plugins: [buble()],
+      plugins: [
+        // ...
+      ],
       format: 'iife',
       sourceMap: 'inline'
     },
