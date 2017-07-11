@@ -1,5 +1,4 @@
 import path from 'path';
-import { expect } from 'chai';
 import buble from 'rollup-plugin-buble';
 
 const prerollupPlugin = require('../');
@@ -21,7 +20,7 @@ const runFixture = (fixture, options = {}) => {
   const createPreprocessor = prerollupPlugin['preprocessor:prerollup'][1];
   const preprocessor = createPreprocessor(null, Object.assign(defaults, options), loggerMock);
   const file = {
-    originalPath: path.resolve(__dirname, 'fixtures/' + fixture)
+    originalPath: path.resolve(__dirname, `fixtures/${fixture}`)
   };
 
   return new Promise((resolve, reject) => {
@@ -41,16 +40,16 @@ const runFixture = (fixture, options = {}) => {
 
 describe('karma-prerollup-plugin', () => {
   it('should be karma preprocessor', () => {
-    expect(prerollupPlugin).to.exist;
-    expect(prerollupPlugin).to.be.an.object;
-    expect(prerollupPlugin['preprocessor:prerollup']).to.be.an.array;
-    expect(prerollupPlugin['preprocessor:prerollup'][1]).to.be.a.function;
+    expect(prerollupPlugin).toBeDefined();
+    expect(typeof prerollupPlugin).toBe('object');
+    // expect(typeof prerollupPlugin['preprocessor:prerollup']).toBe('array');
+    expect(typeof prerollupPlugin['preprocessor:prerollup'][1]).toBe('function');
   });
 
   it('should bundle es2015 modules', () => {
     return runFixture('module.js', { format: 'iife' })
       .then(({ code }) => {
-        expect(code).to.not.contain('//# sourceMappingURL');
+        expect(code).not.toContain('//# sourceMappingURL');
       });
   });
 
@@ -61,8 +60,8 @@ describe('karma-prerollup-plugin', () => {
   it('should fail when an import is not found', () => {
     return runFixture('error-import-not-found.js', { format: 'iife' })
       .catch(error => {
-        expect(error.message).to.contain('Could not resolve');
-        expect(error.message).to.contain('error-import-not-found.js');
+        expect(error.message).toContain('Could not resolve');
+        expect(error.message).toContain('error-import-not-found.js');
       });
   });
 
@@ -72,14 +71,14 @@ describe('karma-prerollup-plugin', () => {
         sourceMap: 'inline'
       })
       .then(({ code }) => {
-        expect(code).to.contain('//# sourceMappingURL');
+        expect(code).toContain('//# sourceMappingURL');
       });
   });
 
   it('should not add map property in file', () => {
     return runFixture('es2015.js', { format: 'iife' })
       .then(({ file }) => {
-        expect(file.sourceMap).not.to.be.ok;
+        expect(file.sourceMap).toBeFalsy();
       });
   });
 
@@ -89,7 +88,7 @@ describe('karma-prerollup-plugin', () => {
         sourceMap: true
       })
       .then(({ file }) => {
-        expect(file.sourceMap).to.be.ok;
+        expect(file.sourceMap).toBeTruthy();
       });
   });
 });
